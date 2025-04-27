@@ -1,0 +1,66 @@
+
+version: '3'
+
+services:
+  pixelit_api:
+    container_name: pixelit_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
+    command: npm run dev
+    environment:
+      - PORT=8081
+      - TELEMETRY_USER_CHECK=true
+      - MYSQL_HOST=mysql_db
+      - MYSQL_DATABASE=pixelit
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=your_password
+      - GITHUB_TOKEN=your_github_token
+      - API_GLOBAL_LIMIT_WINDOW_MS=300000
+      - API_GLOBAL_LIMIT_MAX=100
+      - API_TELEMETRY_LIMIT_WINDOW_MS=900000
+      - API_TELEMETRY_LIMIT_MAX=10
+      - API_SAVEBITMAP_LIMIT_WINDOW_MS=900000
+      - API_SAVEBITMAP_LIMIT_MAX=10
+      - API_GLOBAL_LIMIT_EXCLUDE=192.168.0.1,192.168.2.1,192.168.3.1,::1
+      - API_TELEMETRY_LIMIT_EXCLUDE=192.168.0.1,192.168.2.1,192.168.3.1,::1
+      - API_SAVEBITMAP_LIMIT_EXCLUDE=192.168.0.1,192.168.2.1,192.168.3.1,::1
+      - SEQ_SERVER=http://seq:5341
+      - SEQ_APIKEY=your_seq_api_key
+    depends_on:
+      - mysql_db
+      - seq
+
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: your_password
+      MYSQL_DATABASE: pixelit
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    restart: unless-stopped
+    ports:
+      - "5341:80"
+    environment:
+      ACCEPT_EULA: "Y"
+    volumes:
+      - seq_data:/data
+
+volumes:
+  mysql_data:
+  seq_data:

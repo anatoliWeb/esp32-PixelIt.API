@@ -17,6 +17,7 @@ const telemetryUserCheck = process.env.TELEMETRY_USER_CHECK ? process.env.TELEME
 
 // defining the Express app
 const app = express();
+
 app.use(useragent.express());
 // adding Helmet to enhance your Rest API's security
 app.use(helmet());
@@ -237,4 +238,10 @@ app.post('/api/SaveBitmap', saveBitmapLimiter, async (req, res) => {
 // starting the server
 app.listen(port, () => {
     log.info('API listening on port {port}', { port, });
+	
+	console.log('-----------------------------------');
+    console.log('🚀 PixelIt.API запущено!');
+    console.log(`🌐 Сервер слухає на порту: ${port}`);
+    console.log(`📅 Час старту: ${new Date().toLocaleString()}`);
+    console.log('-----------------------------------');
 });

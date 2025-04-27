@@ -1,0 +1,11 @@
+{
+  "watch": ["./"], 
+  "ignore": [
+    "node_modules/*",
+    "Dockerfile",
+    "docker-compose.yml",
+    ".git/*",
+    "package-lock.json"
+  ],
+  "ext": "js,json"
+}
